@@ -319,6 +319,96 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     </div>
   </section>
 
+  <details class="adv" id="horeca">
+    <summary>Dla gastronomii i hoteli: druga strona kranu</summary>
+    <div style="padding:0 18px 18px">
+      <p style="margin:0 0 14px; color:var(--muted); max-width:64ch; font-size:14px">
+        Woda z sieci kosztuje grosze za litr, a karafka na stole ma swoją cenę w karcie.
+        Nie pokazujemy tu, ile zarobicie, bo tego nie wiemy. Pokazujemy, ile karafek musi zejść,
+        żeby urządzenie było za darmo. Wszystkie kwoty netto.
+      </p>
+
+      <div class="note-frozen" style="margin:0 0 18px; border-left:3px solid var(--brand)">
+        Wodę z kranu naleje każdy. <b>Zimnej gazowanej, schłodzonej na stałe i wrzątku 98°C na kliknięcie</b> nie naleje nikt,
+        a to jest dokładnie to, za co gość płaci w karcie. Jedno urządzenie obsługuje karafki, lemoniady, napary i herbatę.
+      </div>
+
+      <div style="overflow-x:auto">
+      <table style="width:100%; border-collapse:collapse; font-size:13.5px; min-width:520px">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px 10px; font:600 11px/1.3 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line)">Pozycja w karcie</th>
+            <th style="text-align:right; padding:8px 10px; font:600 11px/1.3 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line)">Cena</th>
+            <th style="text-align:right; padding:8px 10px; font:600 11px/1.3 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line)">Koszt</th>
+            <th style="text-align:right; padding:8px 10px; font:600 11px/1.3 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line)">Marża</th>
+            <th style="text-align:right; padding:8px 10px; font:600 11px/1.3 var(--cond); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--line)">Próg / mies.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:8px 10px; border-bottom:1px solid var(--line)">Karafka wody, gazowanej lub nie</td>
+            <td style="padding:6px 10px; border-bottom:1px solid var(--line)"><input type="number" id="hCenaW" value="12" step="1" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td style="padding:6px 10px; border-bottom:1px solid var(--line)"><input type="number" id="hKosztW" value="1.5" step="0.5" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td class="num" id="h-m1" style="padding:8px 10px; text-align:right; border-bottom:1px solid var(--line)">—</td>
+            <td class="num" id="h-p1" style="padding:8px 10px; text-align:right; font-weight:600; border-bottom:1px solid var(--line)">—</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px; border-bottom:1px solid var(--line)">Karafka lemoniady</td>
+            <td style="padding:6px 10px; border-bottom:1px solid var(--line)"><input type="number" id="hCenaL" value="20" step="1" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td style="padding:6px 10px; border-bottom:1px solid var(--line)"><input type="number" id="hKosztL" value="3" step="0.5" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td class="num" id="h-m2" style="padding:8px 10px; text-align:right; border-bottom:1px solid var(--line)">—</td>
+            <td class="num" id="h-p2" style="padding:8px 10px; text-align:right; font-weight:600; border-bottom:1px solid var(--line)">—</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 10px">Herbata lub napar, wrzątek 98°C</td>
+            <td style="padding:6px 10px"><input type="number" id="hCenaH" value="12" step="1" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td style="padding:6px 10px"><input type="number" id="hKosztH" value="1" step="0.5" min="0" style="font-size:14px; padding:6px 8px; text-align:right"></td>
+            <td class="num" id="h-m3" style="padding:8px 10px; text-align:right">—</td>
+            <td class="num" id="h-p3" style="padding:8px 10px; text-align:right; font-weight:600">—</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="hint" style="margin:8px 0 0">W koszcie ujmijcie to, co schodzi na jedną sztukę: cytrynę, miętę, syrop, torebkę, mycie. CO2 liczymy osobno, niżej.</p>
+
+      <div class="controls-grid" style="margin-top:16px">
+        <label class="f"><span class="lab">Wymiana butli CO2 (zł)</span><input type="number" id="hCO2Cena" value="100" step="10" min="0"><span class="hint">Butla 5 kg</span></label>
+        <label class="f"><span class="lab">Wydajność butli (L wody gazowanej)</span><input type="number" id="hCO2Wyd" value="850" step="50" min="1"></label>
+        <label class="f"><span class="lab">Pojemność karafki (L)</span><input type="number" id="hKarafka" value="1" step="0.1" min="0.1"></label>
+      </div>
+      <div class="note-frozen" style="margin-top:12px">
+        CO2 na jedną karafkę gazowaną: <b id="h-co2">—</b>. Doliczone do wody i lemoniady, herbata go nie potrzebuje.
+        Przy podanej niżej sprzedaży butla starczy wam na <b id="h-co2-mies">—</b>.
+      </div>
+
+      <div class="panel" style="margin-top:18px; padding:20px; border-left:4px solid var(--brand)">
+        <span class="eyebrow">Próg opłacalności</span>
+        <div class="big num" id="h-prog" style="color:var(--brand); font-size:clamp(24px,5vw,34px); margin-top:6px">—</div>
+        <p style="margin:8px 0 0; color:var(--muted); max-width:64ch" id="h-prog-txt"></p>
+        <p style="margin:12px 0 0; padding-top:12px; border-top:1px solid var(--line); max-width:64ch; font-size:13.5px">
+          <b>Abonament jest płaski i nie rośnie z poborem wody.</b> Po przekroczeniu progu każda kolejna karafka
+          kosztuje was tylko wodę z sieci i CO2, czyli <b class="num" id="h-krancowy">—</b>.
+          Przy butelkach jest odwrotnie: im więcej wypijecie, tym więcej płacicie.
+        </p>
+      </div>
+
+      <div class="controls-grid" style="margin-top:16px">
+        <label class="f"><span class="lab">Karafek dziennie, realnie</span><input type="number" id="hIle" value="5" step="1" min="0"><span class="hint">Wpiszcie ostrożnie, nie docelowo</span></label>
+      </div>
+
+      <div class="hz-grid" style="margin-top:16px">
+        <div class="hz"><div class="k">Zysk przy podanej sprzedaży</div><div class="v num" id="h-marza">—</div><div class="hint" style="margin-top:4px">miesięcznie, po odjęciu abonamentu</div></div>
+        <div class="hz"><div class="k">To samo w skali roku</div><div class="v num" id="h-rok">—</div><div class="hint" style="margin-top:4px">na samych karafkach wody</div></div>
+        <div class="hz"><div class="k">Butelek, które nie powstaną</div><div class="v num" id="h-plastik" style="color:var(--accent-ink)">—</div><div class="hint" style="margin-top:4px">rocznie, wraz z kaucjami i zwrotami</div></div>
+      </div>
+
+      <div class="note-frozen" style="margin-top:16px">
+        Pierwsza karafka powitalna gratis kosztuje was <b id="h-powitalna">—</b>, a gość odbiera gest wart tyle, ile widzi w karcie.
+        Przy wrzątku 98°C to samo działa z herbatą do stolika.
+      </div>
+    </div>
+  </details>
+
   <details class="adv">
     <summary>Dopasuj szczegóły do swojego obiektu</summary>
     <div class="adv-body">
@@ -345,7 +435,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
-        <label class="f"><span class="lab">Abonament (zł/mies.)</span><input type="number" id="dAbo" value="250" step="10" min="0"></label>
+        <label class="f"><span class="lab">Abonament (zł/mies.)</span><input type="number" id="dAbo" value="280" step="10" min="0"><span class="hint">280-450 zł zależnie od wydajności urządzenia</span></label>
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies.)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
         <h4 style="margin-top:18px">Wspólne</h4>
@@ -388,7 +478,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
   var FIELDS = ['osoby','dni','zuzycie','bPoj','bCena','bKauc','bLog','bMinSzt','bDost','bMinDost',
                 'gPoj','gCena','gKauc','gLog','gWyn','gSer','gMin','gOsoby',
-                'dAbo','dSer','dCena','stawka','vat'];
+                'dAbo','dSer','dCena','stawka','vat',
+                'hCenaW','hKosztW','hCenaL','hKosztL','hCenaH','hKosztH','hIle',
+                'hCO2Cena','hCO2Wyd','hKarafka'];
 
   var state = { gross:false, now:'but', labour:false };
 
@@ -505,6 +597,69 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     var col = diff >= 0 ? 'var(--green)' : 'var(--rust)';
     ['hz12','hz24','hz36'].forEach(function(id){ $(id).style.color = col; });
 
+    // HoReCa: prog oplacalnosci w karafkach
+    (function(){
+      var dni = num('dni') || 1;
+      var kosztUrz = num('dAbo') + num('dSer');     // zawsze netto, ceny z karty tez netto
+      var karafkaL = num('hKarafka') || 1;
+      var wodaKarafka = num('dCena') * karafkaL;    // woda z sieci na karafke
+      var co2Karafka = (num('hCO2Wyd') > 0) ? (num('hCO2Cena') / num('hCO2Wyd')) * karafkaL : 0;
+      var poz = [
+        {c:'hCenaW', k:'hKosztW', m:'h-m1', p:'h-p1', co2:true},
+        {c:'hCenaL', k:'hKosztL', m:'h-m2', p:'h-p2', co2:true},
+        {c:'hCenaH', k:'hKosztH', m:'h-m3', p:'h-p3', co2:false}
+      ];
+      var marzaW = 0;
+      poz.forEach(function(x, idx){
+        var marza = num(x.c) - num(x.k) - wodaKarafka - (x.co2 ? co2Karafka : 0);
+        if(idx === 0) marzaW = marza;
+        $(x.m).textContent = PLN(marza);
+        if(marza > 0){
+          var prog = Math.ceil(kosztUrz / marza);
+          $(x.p).textContent = prog + ' szt.';
+          $(x.p).style.color = 'var(--ink)';
+        } else {
+          $(x.p).textContent = 'brak marży';
+          $(x.p).style.color = 'var(--rust)';
+        }
+      });
+
+      if(marzaW > 0){
+        var progW = Math.ceil(kosztUrz / marzaW);
+        var naDzien = progW / dni;
+        $('h-prog').textContent = progW + ' karafek wody miesięcznie';
+        $('h-prog-txt').textContent = 'Tyle wystarczy, żeby urządzenie za ' + PLN(kosztUrz) +
+          ' miesięcznie kosztowało was zero. To ' + naDzien.toLocaleString('pl-PL',{maximumFractionDigits:1}) +
+          ' karafki dziennie przy ' + INT(dni) + ' dniach pracy. Wszystko powyżej to już wasz zysk, ' +
+          'a lemoniady i herbata zbijają ten próg jeszcze niżej.';
+      } else {
+        $('h-prog').textContent = 'Marża wychodzi zerowa';
+        $('h-prog-txt').textContent = 'Przy tej cenie karafki i takim koszcie dodatków nie ma z czego pokryć abonamentu. Sprawdźcie te dwie liczby.';
+      }
+
+      var marzaMies = num('hIle') * dni * marzaW;
+      var zysk = marzaMies - kosztUrz;
+      $('h-marza').textContent = PLN(zysk);
+      $('h-rok').textContent = PLN(zysk * 12);
+      $('h-marza').style.color = zysk >= 0 ? 'var(--green)' : 'var(--rust)';
+      $('h-rok').style.color   = zysk >= 0 ? 'var(--green)' : 'var(--rust)';
+
+      var butelkaL = num('bPoj') || 1.5;
+      $('h-plastik').textContent = INT((r.litry * 12) / butelkaL) + ' szt.';
+      $('h-powitalna').textContent = PLN(wodaKarafka + co2Karafka + num('hKosztW'));
+      $('h-co2').textContent = PLN(co2Karafka);
+      $('h-krancowy').textContent = PLN(wodaKarafka + co2Karafka);
+
+      var litrowGaz = num('hIle') * dni * karafkaL;
+      if(litrowGaz > 0 && num('hCO2Wyd') > 0){
+        var mies = num('hCO2Wyd') / litrowGaz;
+        $('h-co2-mies').textContent = mies.toLocaleString('pl-PL',{maximumFractionDigits:1}) +
+          (mies >= 2 ? ' miesiąca' : ' miesiąca');
+      } else {
+        $('h-co2-mies').textContent = 'nie da się policzyć';
+      }
+    })();
+
     // mailto
     var subj = 'Prośba o ofertę na dystrybutory, ' + INT(num('osoby')) + ' osób';
     var body = 'Dzień dobry Panie Bartoszu,\n\npoliczyliśmy na kalkulatorze:\n' +
@@ -557,6 +712,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       var p = PRESETS[btn.dataset.preset];
       $('osoby').value = p.osoby; $('dni').value = p.dni; $('zuzycie').value = p.zuzycie;
       setPressed(presetBtns, function(b){ return b === btn; });
+      if(btn.dataset.preset === 'hotel'){ $('horeca').open = true; }
       render();
     });
   });
