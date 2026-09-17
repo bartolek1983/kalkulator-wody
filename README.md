@@ -1,73 +1,59 @@
 # Kalkulator kosztów wody
 
-Narzędzie porównujące realny koszt wody w firmie w trzech wariantach: woda butelkowana 1,5 L, galony 18,9 L i dystrybutor podłączony do sieci wodociągowej. Dla gastronomii i hoteli pokazuje dodatkowo, ile karafek trzeba sprzedać, żeby urządzenie pokryło swój abonament.
+Narzędzie porównujące realny koszt wody w firmie w trzech wariantach: woda butelkowana 1,5 L, galony 18,9 L i dystrybutor podłączony do sieci wodociągowej. Dla gastronomii i hoteli liczy dodatkowo próg opłacalności na sprzedaży karafek.
 
-**Działa pod adresem:** https://bartolek1983.github.io/kalkulator-wody/
+**https://bartolek1983.github.io/kalkulator-wody/**
 
-Jedna strona, bez serwera i bez bazy danych. Wszystko liczy się w przeglądarce, żadne dane nie są nigdzie wysyłane ani zapisywane.
-
----
-
-## Jak zaktualizować stronę
-
-1. Skasuj stary `index.html` z folderu Pobrane
-2. Pobierz nową wersję pliku
-3. W tym repozytorium: **Add file → Upload files**
-4. Przeciągnij `index.html` i kliknij **Commit changes**
-5. Po minucie strona sama się przebuduje, adres zostaje ten sam
-
-**Uwaga, pułapka.** Jeśli w Pobranych leży już plik o nazwie `index.html`, przeglądarka zapisze nowy jako `index_1.html`. GitHub doda go wtedy obok starego zamiast podmienić, a strona dalej będzie pokazywać poprzednią wersję i **nic nie zasygnalizuje błędu**. Dlatego krok pierwszy jest krokiem pierwszym.
-
-Jeśli mimo wszystko wgrasz plik pod złą nazwą: otwórz go w repozytorium, kliknij ikonę edycji, zmień nazwę w polu na górze na `index.html` i zatwierdź. Stary plik trzeba wcześniej usunąć.
+Jedna strona bez serwera i bez bazy danych. Wszystko liczy się w przeglądarce, żadne dane nie opuszczają urządzenia użytkownika.
 
 ---
 
-## Jak to liczy
+## Metodologia
 
-Wszystkie trzy warianty dostają **tę samą ilość wody**, wyliczoną z jednego pola: liczba osób razy zużycie na osobę razy dni w miesiącu. Liczba butelek i galonów wynika z tej ilości, nie odwrotnie.
+Wszystkie trzy warianty dostają **tę samą ilość wody**, wyliczoną z jednego pola. Liczba butelek i galonów wynika z tej ilości, nie odwrotnie. To jedyny sposób, żeby porównanie miało sens.
 
 ```
-litry           = osoby × zużycie na osobę × dni
-butelek         = zaokrąglenie w górę (litry ÷ pojemność butelki)
-galonów         = zaokrąglenie w górę (litry ÷ pojemność galonu)
+litry        = osoby × zużycie na osobę × dni
+butelek      = ⌈ litry ÷ pojemność butelki ⌉
+galonów      = ⌈ litry ÷ pojemność galonu ⌉
 
-butelki         = butelek × cena + logistyka + obsługa
-galony          = galonów × cena + logistyka + wynajem + serwis + obsługa
-dystrybutor     = litry × cena wody z sieci + abonament + serwis
+butelki      = butelek × cena + logistyka + obsługa
+galony       = galonów × cena + logistyka + wynajem + serwis + obsługa
+dystrybutor  = litry × cena wody z sieci + abonament + serwis
 ```
 
-Każda pozycja, która wchodzi do sumy, ma swój widoczny wiersz w wyniku. Suma kolumny zawsze zgadza się z tym, co widać nad nią.
+Każda pozycja wchodząca do sumy ma swój widoczny wiersz w wyniku. Suma kolumny zawsze zgadza się z tym, co widać nad nią.
 
-### Trzy decyzje, które warto znać
+### Trzy decyzje, które kształtują wynik
 
-**Kaucje są poza kosztem miesięcznym.** Są zwrotne, więc liczenie ich co miesiąc zawyżałoby koszt butelek i galonów. Pokazujemy je osobno, jako kapitał zamrożony w opakowaniach będących w obiegu.
+**Kaucje są poza kosztem miesięcznym.** Kaucja jest zwrotna, więc naliczanie jej co miesiąc zawyżałoby koszt butelek i galonów. Pokazujemy ją osobno, jako kapitał zamrożony w opakowaniach będących w obiegu.
 
-**VAT albo wszędzie, albo nigdzie.** Jeden przełącznik na górze strony przelicza wszystkie trzy warianty naraz. Domyślnie netto, bo dla firm rozliczających VAT jest on przelewaniem z kieszeni do kieszeni.
+**VAT albo wszędzie, albo nigdzie.** Jeden przełącznik przelicza wszystkie trzy warianty naraz. Domyślnie netto, ponieważ dla firm rozliczających VAT jest on przelewaniem z kieszeni do kieszeni.
 
-**Czas pracy jest domyślnie wyłączony.** Noszenie, magazynowanie i przyjmowanie dostaw kosztują, ale wielu firmom trudno przypisać temu kwotę. Wynik opiera się więc wyłącznie na twardych kosztach, a czas ludzi można dołączyć jednym kliknięciem. Po włączeniu liczy się w każdym wariancie tak samo, według podanej stawki godzinowej.
+**Czas pracy jest domyślnie wyłączony.** Noszenie, magazynowanie i przyjmowanie dostaw kosztują, ale niełatwo przypisać im kwotę, której nikt nie podważy. Wynik podstawowy opiera się więc wyłącznie na kosztach twardych. Po włączeniu czas liczy się w każdym wariancie tak samo, według podanej stawki godzinowej.
 
 ---
 
 ## Sekcja dla gastronomii i hoteli
 
-Zwinięta, otwiera się po kliknięciu presetu **Hotel**.
+Zwinięta, otwiera się po wybraniu presetu **Hotel**.
 
-Nie prognozuje przychodu, bo sprzedaż lokalu to nie jest coś, co da się przewidzieć z zewnątrz. Zamiast tego liczy **próg opłacalności**: ile sztuk danej pozycji z karty musi zejść w miesiącu, żeby urządzenie kosztowało zero.
+Nie prognozuje przychodu lokalu, bo tego nie da się oszacować z zewnątrz. Liczy **próg opłacalności**: ile sztuk danej pozycji z karty musi zejść w miesiącu, żeby urządzenie kosztowało zero.
 
 ```
-marża na sztuce = cena w karcie − koszt dodatków − woda z sieci − CO2
-próg            = zaokrąglenie w górę (abonament + serwis) ÷ marża
+marża na sztuce = cena w karcie − koszt składników − woda z sieci − CO2
+próg            = ⌈ (abonament + serwis) ÷ marża ⌉
 ```
 
-Trzy pozycje liczone osobno: karafka wody, karafka lemoniady i herbata z wrzątku. CO2 doliczane jest do wody i lemoniady, herbata go nie potrzebuje. Wydajność butli CO2 i cena wymiany są polami do edycji, więc widać, ile dokładnie kosztuje jedna karafka gazowana.
+Trzy pozycje liczone niezależnie: karafka wody, karafka lemoniady i herbata z wrzątku. CO2 doliczane jest do wody i lemoniady, herbata go nie wymaga. Cena wymiany butli i jej wydajność są polami edytowalnymi, więc koszt jednej karafki gazowanej jest widoczny wprost.
 
-Sekcja pokazuje też liczbę butelek, które w skali roku nie powstaną, oraz koszt krańcowy karafki po przekroczeniu progu.
+Sekcja podaje też liczbę butelek, które w skali roku nie powstaną, oraz koszt krańcowy karafki po przekroczeniu progu.
 
 ---
 
 ## Wartości domyślne
 
-To są **szacunki rynkowe, nie oferta**. Każde pole można podmienić, a wynik przelicza się natychmiast. Wartości dobrane ostrożnie, tak żeby wynik nie zależał od optymistycznych założeń.
+Szacunki rynkowe, nie oferta. Każde pole jest edytowalne, wynik przelicza się natychmiast.
 
 | | Domyślnie |
 |---|---|
@@ -81,11 +67,21 @@ To są **szacunki rynkowe, nie oferta**. Każde pole można podmienić, a wynik 
 
 ---
 
-## Wysyłanie klientowi konkretnego wyliczenia
+## Wyliczenie dla konkretnego klienta
 
-Każda zmiana pola zapisuje się w adresie strony. Ustaw parametry pod dany obiekt, kliknij **Skopiuj link z tym wyliczeniem** i wyślij. Klient otworzy stronę ze swoimi liczbami, nie domyślnymi.
+Stan wszystkich pól zapisuje się w adresie strony. Po ustawieniu parametrów pod dany obiekt przycisk **Skopiuj link z tym wyliczeniem** daje adres, który otworzy się u odbiorcy z jego liczbami zamiast domyślnych.
 
-Strona jest przygotowana do druku i zapisu do PDF, więc wyliczenie można przekazać dalej w organizacji.
+Strona ma arkusz stylów do druku, więc wyliczenie można zapisać do PDF i przekazać dalej w organizacji.
+
+---
+
+## Techniczne
+
+Jeden plik `index.html`: struktura, style i skrypt w jednym, logo osadzone jako dane. Bez zależności, bez procesu budowania, bez frameworka.
+
+Hosting: GitHub Pages, gałąź `main`, katalog główny. Wdrożenie następuje automatycznie po każdym commicie do `main`.
+
+Obsługuje jasny i ciemny motyw systemowy oraz układ mobilny od 360 px wzwyż.
 
 ---
 
