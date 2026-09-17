@@ -1,6 +1,6 @@
 # Kalkulator kosztów wody
 
-Narzędzie porównujące realny koszt wody w firmie w trzech wariantach: woda butelkowana 1,5 L, galony 18,9 L i dystrybutor podłączony do sieci wodociągowej. Dla gastronomii i hoteli liczy dodatkowo próg opłacalności na sprzedaży karafek.
+Narzędzie porównujące realny koszt wody w firmie w trzech wariantach: woda butelkowana 1,5 L, galony 18,9 L i dystrybutor podłączony do sieci wodociągowej. Dla HoReCa liczy dodatkowo próg opłacalności na sprzedaży karafek.
 
 **https://bartolek1983.github.io/kalkulator-wody/**
 
@@ -34,9 +34,9 @@ Każda pozycja wchodząca do sumy ma swój widoczny wiersz w wyniku. Suma kolumn
 
 ---
 
-## Sekcja dla gastronomii i hoteli
+## Sekcja HoReCa
 
-Zwinięta, otwiera się po wybraniu presetu **Hotel**.
+Zwinięta, otwiera się po wybraniu presetu **Hotel** lub **Restauracja**. Przy restauracji strona przewija się od razu do tej sekcji, ponieważ porównanie kosztów w górnej części dotyczy wtedy tylko wody wypijanej przez personel, a nie tej sprzedawanej gościom.
 
 Nie prognozuje przychodu lokalu, bo tego nie da się oszacować z zewnątrz. Liczy **próg opłacalności**: ile sztuk danej pozycji z karty musi zejść w miesiącu, żeby urządzenie kosztowało zero.
 

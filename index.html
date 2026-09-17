@@ -215,6 +215,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       <div class="seg" role="group" aria-label="Typ obiektu">
         <button type="button" data-preset="biuro" aria-pressed="true">Biuro</button>
         <button type="button" data-preset="hotel" aria-pressed="false">Hotel</button>
+        <button type="button" data-preset="restauracja" aria-pressed="false">Restauracja</button>
         <button type="button" data-preset="zaklad" aria-pressed="false">Zakład</button>
         <button type="button" data-preset="urzad" aria-pressed="false">Urząd</button>
       </div>
@@ -228,7 +229,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       <label class="f">
         <span class="lab">Dni z wodą w miesiącu</span>
         <input type="number" id="dni" value="21" min="1" max="31" step="1">
-        <span class="hint">Biuro 21, hotel i produkcja 30</span>
+        <span class="hint">Biuro 21, HoReCa i produkcja 30</span>
       </label>
       <label class="f">
         <span class="lab">Zużycie na osobę / dzień (L)</span>
@@ -249,6 +250,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     <span class="eyebrow">Różnica w skali roku</span>
     <div class="big loss num" id="verdict-big">—</div>
     <p id="verdict-txt"></p>
+    <p id="rest-note" hidden style="margin:10px 0 0; padding:10px 12px; border-radius:7px; background:var(--accent-soft); color:var(--accent-ink); font-size:13.5px; max-width:64ch">
+      To porównanie dotyczy wody wypijanej przez personel. W restauracji prawdziwy rachunek robi się niżej, w sekcji HoReCa, gdzie woda z kranu staje się pozycją w karcie.
+    </p>
 
     <div class="bars" id="bars">
       <div class="bar-row">
@@ -320,7 +324,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
   </section>
 
   <details class="adv" id="horeca">
-    <summary>Dla gastronomii i hoteli: druga strona kranu</summary>
+    <summary>HoReCa: druga strona kranu</summary>
     <div style="padding:0 18px 18px">
       <p style="margin:0 0 14px; color:var(--muted); max-width:64ch; font-size:14px">
         Woda z sieci kosztuje grosze za litr, a karafka na stole ma swoją cenę w karcie.
@@ -482,13 +486,14 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
                 'hCenaW','hKosztW','hCenaL','hKosztL','hCenaH','hKosztH','hIle',
                 'hCO2Cena','hCO2Wyd','hKarafka'];
 
-  var state = { gross:false, now:'but', labour:false };
+  var state = { gross:false, now:'but', labour:false, preset:'biuro' };
 
   var PRESETS = {
-    biuro:  {osoby:20, dni:21, zuzycie:2},
-    hotel:  {osoby:50, dni:30, zuzycie:3},
-    zaklad: {osoby:100, dni:21, zuzycie:3},
-    urzad:  {osoby:40, dni:21, zuzycie:2}
+    biuro:       {osoby:20,  dni:21, zuzycie:2},
+    hotel:       {osoby:50,  dni:30, zuzycie:3},
+    restauracja: {osoby:15,  dni:26, zuzycie:3},
+    zaklad:      {osoby:100, dni:21, zuzycie:3},
+    urzad:       {osoby:40,  dni:21, zuzycie:2}
   };
 
   function setPressed(list, matchFn){
@@ -577,6 +582,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
     $('chip-but').hidden = state.now !== 'but';
     $('chip-gal').hidden = state.now !== 'gal';
+    $('rest-note').hidden = state.preset !== 'restauracja';
 
     if(diff > 0){
       v.className = 'verdict loss'; big.className = 'big loss num';
@@ -681,6 +687,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       p.set('now', state.now);
       if(state.gross) p.set('gross','1');
       if(state.labour) p.set('labour','1');
+      p.set('preset', state.preset);
       history.replaceState(null, '', '?' + p.toString());
     }catch(e){}
   }
@@ -693,6 +700,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       if(p.get('now') === 'gal') state.now = 'gal';
       if(p.get('gross') === '1') state.gross = true;
       if(p.get('labour') === '1') state.labour = true;
+      if(PRESETS[p.get('preset')]) state.preset = p.get('preset');
     }catch(e){}
   }
 
@@ -709,11 +717,17 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
   var presetBtns = Array.prototype.slice.call(document.querySelectorAll('[data-preset]'));
   presetBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
-      var p = PRESETS[btn.dataset.preset];
+      var key = btn.dataset.preset;
+      var p = PRESETS[key];
+      state.preset = key;
       $('osoby').value = p.osoby; $('dni').value = p.dni; $('zuzycie').value = p.zuzycie;
       setPressed(presetBtns, function(b){ return b === btn; });
-      if(btn.dataset.preset === 'hotel'){ $('horeca').open = true; }
+      if(key === 'hotel' || key === 'restauracja'){ $('horeca').open = true; }
       render();
+      if(key === 'restauracja'){
+        var plynnie = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        $('horeca').scrollIntoView({behavior: plynnie ? 'smooth' : 'auto', block: 'start'});
+      }
     });
   });
 
@@ -749,6 +763,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
   });
 
   loadUrl();
+  presetBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.preset === state.preset ? 'true':'false'); });
+  if(state.preset === 'hotel' || state.preset === 'restauracja'){ $('horeca').open = true; }
   nowBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.now === state.now ? 'true':'false'); });
   $('vat-net').setAttribute('aria-pressed', state.gross ? 'false':'true');
   $('vat-gross').setAttribute('aria-pressed', state.gross ? 'true':'false');
