@@ -439,7 +439,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
-        <label class="f"><span class="lab">Abonament (zł/mies.)</span><input type="number" id="dAbo" value="280" step="10" min="0"><span class="hint">280-450 zł zależnie od wydajności urządzenia</span></label>
+        <label class="f"><span class="lab">Abonament (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies.)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
         <h4 style="margin-top:18px">Wspólne</h4>
@@ -489,11 +489,11 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
   var state = { gross:false, now:'but', labour:false, preset:'biuro' };
 
   var PRESETS = {
-    biuro:       {osoby:20,  dni:21, zuzycie:2},
-    hotel:       {osoby:50,  dni:30, zuzycie:3},
-    restauracja: {osoby:15,  dni:26, zuzycie:3},
-    zaklad:      {osoby:100, dni:21, zuzycie:3},
-    urzad:       {osoby:40,  dni:21, zuzycie:2}
+    biuro:       {osoby:20,  dni:21, zuzycie:2, abo:200},
+    hotel:       {osoby:50,  dni:30, zuzycie:3, abo:280},
+    restauracja: {osoby:15,  dni:26, zuzycie:3, abo:280},
+    zaklad:      {osoby:100, dni:21, zuzycie:3, abo:280},
+    urzad:       {osoby:40,  dni:21, zuzycie:2, abo:200}
   };
 
   function setPressed(list, matchFn){
@@ -721,6 +721,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       var p = PRESETS[key];
       state.preset = key;
       $('osoby').value = p.osoby; $('dni').value = p.dni; $('zuzycie').value = p.zuzycie;
+      $('dAbo').value = p.abo;
       setPressed(presetBtns, function(b){ return b === btn; });
       if(key === 'hotel' || key === 'restauracja'){ $('horeca').open = true; }
       render();
