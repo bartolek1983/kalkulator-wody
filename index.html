@@ -303,7 +303,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       <ul class="lines">
         <li><span>Litrów miesięcznie</span><b id="d-litry">—</b></li>
         <li><span>Woda z sieci</span><b id="d-woda">—</b></li>
-        <li><span>Abonament urządzenia</span><b id="d-abo">—</b></li>
+        <li><span id="d-abo-lab">Abonament urządzenia</span><b id="d-abo">—</b></li>
         <li><span>Serwis, filtry, energia</span><b id="d-ser">—</b></li>
         <li><span>Noszenie i magazyn</span><b id="d-obs">brak</b></li>
         <li class="sum"><span>Miesięcznie</span><b id="d-mies">—</b></li>
@@ -439,8 +439,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
-        <label class="f"><span class="lab">Abonament (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
-        <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies.)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
+        <label class="f"><span class="lab">Liczba urządzeń</span><input type="number" id="dSzt" value="1" step="1" min="1"><span class="hint">Tyle, ile miejsc instalacji. Osobne piętro, hala produkcyjna czy druga kuchnia to osobne urządzenie.</span></label>
+        <label class="f"><span class="lab">Abonament za urządzenie (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
+        <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies. za urządzenie)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
         <h4 style="margin-top:18px">Wspólne</h4>
         <label class="f"><span class="lab">Koszt godziny pracy (zł)</span><input type="number" id="stawka" value="45" step="5" min="0"><span class="hint">Używany do wyceny noszenia i magazynowania</span></label>
@@ -482,18 +483,18 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
   var FIELDS = ['osoby','dni','zuzycie','bPoj','bCena','bKauc','bLog','bMinSzt','bDost','bMinDost',
                 'gPoj','gCena','gKauc','gLog','gWyn','gSer','gMin','gOsoby',
-                'dAbo','dSer','dCena','stawka','vat',
+                'dSzt','dAbo','dSer','dCena','stawka','vat',
                 'hCenaW','hKosztW','hCenaL','hKosztL','hCenaH','hKosztH','hIle',
                 'hCO2Cena','hCO2Wyd','hKarafka'];
 
   var state = { gross:false, now:'but', labour:false, preset:'biuro' };
 
   var PRESETS = {
-    biuro:       {osoby:20,  dni:21, zuzycie:2, abo:200},
-    hotel:       {osoby:50,  dni:30, zuzycie:3, abo:280},
-    restauracja: {osoby:15,  dni:26, zuzycie:3, abo:280},
-    zaklad:      {osoby:100, dni:21, zuzycie:3, abo:280},
-    urzad:       {osoby:40,  dni:21, zuzycie:2, abo:200}
+    biuro:       {osoby:20,  dni:21, zuzycie:2, abo:200, szt:1},
+    hotel:       {osoby:50,  dni:30, zuzycie:3, abo:280, szt:2},
+    restauracja: {osoby:15,  dni:26, zuzycie:3, abo:280, szt:1},
+    zaklad:      {osoby:100, dni:21, zuzycie:3, abo:280, szt:3},
+    urzad:       {osoby:40,  dni:21, zuzycie:2, abo:200, szt:2}
   };
 
   function setPressed(list, matchFn){
@@ -527,14 +528,15 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     var gKauc = gSzt * num('gKauc');
 
     // dystrybutor
+    var dSzt = Math.max(1, Math.round(num('dSzt') || 1));
     var dWoda = litry * num('dCena');
-    var dAbo = num('dAbo'), dSer = num('dSer');
+    var dAbo = num('dAbo') * dSzt, dSer = num('dSer') * dSzt;
     var dMies = (dWoda + dAbo + dSer) * vatMul;
 
     return {litry:litry, vatMul:vatMul,
       b:{szt:bSzt, woda:bWoda*vatMul, log:bLog*vatMul, obs:bObs*vatMul, mies:bMies, kauc:bKauc},
       g:{szt:gSzt, woda:gWoda*vatMul, log:gLog*vatMul, wyn:gWyn*vatMul, obs:gObs*vatMul, mies:gMies, kauc:gKauc},
-      d:{woda:dWoda*vatMul, abo:dAbo*vatMul, ser:dSer*vatMul, mies:dMies}};
+      d:{woda:dWoda*vatMul, abo:dAbo*vatMul, ser:dSer*vatMul, mies:dMies, szt:dSzt}};
   }
 
   function render(){
@@ -560,6 +562,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     $('d-litry').textContent = INT(r.litry) + ' L';
     $('d-woda').textContent = PLN(r.d.woda);
     $('d-abo').textContent  = PLN(r.d.abo);
+    $('d-abo-lab').textContent = r.d.szt > 1
+      ? ('Abonament, ' + r.d.szt + ' urządzenia')
+      : 'Abonament urządzenia';
     $('d-ser').textContent  = PLN(r.d.ser);
     $('d-mies').textContent = PLN(r.d.mies);
     $('d-rok').textContent  = PLN(r.d.mies*12);
@@ -606,7 +611,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     // HoReCa: prog oplacalnosci w karafkach
     (function(){
       var dni = num('dni') || 1;
-      var kosztUrz = num('dAbo') + num('dSer');     // zawsze netto, ceny z karty tez netto
+      var szt = Math.max(1, Math.round(num('dSzt') || 1));
+      var kosztUrz = (num('dAbo') + num('dSer')) * szt;  // zawsze netto, ceny z karty tez netto
       var karafkaL = num('hKarafka') || 1;
       var wodaKarafka = num('dCena') * karafkaL;    // woda z sieci na karafke
       var co2Karafka = (num('hCO2Wyd') > 0) ? (num('hCO2Cena') / num('hCO2Wyd')) * karafkaL : 0;
@@ -721,7 +727,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       var p = PRESETS[key];
       state.preset = key;
       $('osoby').value = p.osoby; $('dni').value = p.dni; $('zuzycie').value = p.zuzycie;
-      $('dAbo').value = p.abo;
+      $('dAbo').value = p.abo; $('dSzt').value = p.szt;
       setPressed(presetBtns, function(b){ return b === btn; });
       if(key === 'hotel' || key === 'restauracja'){ $('horeca').open = true; }
       render();
