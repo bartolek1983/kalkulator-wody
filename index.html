@@ -253,6 +253,11 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <input type="number" id="osoby" value="20" min="1" step="1">
       </label>
       <label class="f">
+        <span class="lab">Miejsca instalacji</span>
+        <input type="number" id="dSzt" value="1" min="1" step="1">
+        <span class="hint">Jedno urządzenie na miejsce: osobne piętro, hala, druga kuchnia</span>
+      </label>
+      <label class="f">
         <span class="lab">Dni z wodą w miesiącu</span>
         <input type="number" id="dni" value="21" min="1" max="31" step="1">
         <span class="hint">Biuro 21, HoReCa i produkcja 30</span>
@@ -465,7 +470,6 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
-        <label class="f"><span class="lab">Liczba urządzeń</span><input type="number" id="dSzt" value="1" step="1" min="1"><span class="hint">Tyle, ile miejsc instalacji. Osobne piętro, hala produkcyjna czy druga kuchnia to osobne urządzenie.</span></label>
         <label class="f"><span class="lab">Abonament za urządzenie (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies. za urządzenie)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
