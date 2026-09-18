@@ -275,6 +275,14 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
           <button type="button" data-now="gal" aria-pressed="false">Galony</button>
         </div>
       </div>
+      <div class="f">
+        <span class="lab">Woda gazowana w urządzeniu</span>
+        <div class="seg" role="group" aria-label="Wariant urządzenia" style="margin-top:2px">
+          <button type="button" data-gaz="tak" aria-pressed="true">Tak</button>
+          <button type="button" data-gaz="nie" aria-pressed="false">Nie</button>
+        </div>
+        <span class="hint">Bez gazowanej urządzenie jest tańsze</span>
+      </div>
     </div>
   </section>
 
@@ -472,7 +480,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
         <label class="f"><span class="lab">Miejsca instalacji</span><input type="number" id="dSztEcho" value="1" step="1" min="1"><span class="hint">To samo pole co w kroku 1, zmiana działa w obie strony</span></label>
-        <label class="f"><span class="lab">Abonament za urządzenie (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
+        <label class="f"><span class="lab">Abonament za urządzenie (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Bez gazowanej od 120 zł. Z gazowaną od 200 zł w biurze i 280-450 zł w HoReCa, zależnie od wydajności. Ceny netto.</span></label>
         <p class="hint" id="d-razem" style="margin:-4px 0 11px; color:var(--accent-ink)">—</p>
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies. za urządzenie)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
@@ -520,7 +528,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
                 'hCenaW','hKosztW','hCenaL','hKosztL','hCenaH','hKosztH','hIle',
                 'hCO2Cena','hCO2Wyd','hKarafka'];
 
-  var state = { gross:false, now:'but', labour:false, preset:'biuro' };
+  var state = { gross:false, now:'but', labour:false, preset:'biuro', gaz:true };
+  var ABO_BEZ_GAZU = 120;
 
   var PRESETS = {
     biuro:       {osoby:20,  dni:21, zuzycie:2, abo:200, szt:1},
@@ -643,7 +652,10 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       v.className = 'verdict saving'; big.className = 'big saving num';
       big.textContent = PLN(Math.abs(diff)*12) + ' rocznie';
       $('verdict-txt').textContent = 'Przy tych parametrach wasze obecne rozwiązanie wychodzi taniej od dystrybutora o ' +
-        PLN(Math.abs(diff)) + ' miesięcznie. Warto sprawdzić założenia w „Dopasuj szczegóły”, zwłaszcza czas ludzi i cenę wody.';
+        PLN(Math.abs(diff)) + ' miesięcznie.' +
+        (state.gaz
+          ? ' Przy małym obiekcie sprawdźcie wariant bez wody gazowanej, urządzenie jest wtedy tańsze. Przełącznik jest wyżej.'
+          : ' Warto sprawdzić założenia w „Dopasuj szczegóły”, zwłaszcza czas ludzi i cenę wody.');
     }
     $('hz12').textContent = PLN(diff*12);
     $('hz24').textContent = PLN(diff*24);
@@ -658,7 +670,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       var kosztUrz = (num('dAbo') + num('dSer')) * szt;  // zawsze netto, ceny z karty tez netto
       var karafkaL = num('hKarafka') || 1;
       var wodaKarafka = num('dCena') * karafkaL;    // woda z sieci na karafke
-      var co2Karafka = (num('hCO2Wyd') > 0) ? (num('hCO2Cena') / num('hCO2Wyd')) * karafkaL : 0;
+      var co2Karafka = (state.gaz && num('hCO2Wyd') > 0) ? (num('hCO2Cena') / num('hCO2Wyd')) * karafkaL : 0;
       var poz = [
         {c:'hCenaW', k:'hKosztW', m:'h-m1', p:'h-p1', co2:true},
         {c:'hCenaL', k:'hKosztL', m:'h-m2', p:'h-p2', co2:true},
@@ -737,6 +749,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       if(state.gross) p.set('gross','1');
       if(state.labour) p.set('labour','1');
       p.set('preset', state.preset);
+      p.set('gaz', state.gaz ? '1' : '0');
       history.replaceState(null, '', '?' + p.toString());
     }catch(e){}
   }
@@ -750,6 +763,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       if(p.get('gross') === '1') state.gross = true;
       if(p.get('labour') === '1') state.labour = true;
       if(PRESETS[p.get('preset')]) state.preset = p.get('preset');
+      if(p.get('gaz') === '0') state.gaz = false;
     }catch(e){}
   }
 
@@ -776,6 +790,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       var p = PRESETS[key];
       state.preset = key;
       $('osoby').value = p.osoby; $('dni').value = p.dni; $('zuzycie').value = p.zuzycie;
+      state.gaz = true;
+      setPressed(gazBtns, function(b){ return b.dataset.gaz === 'tak'; });
       $('dAbo').value = p.abo; $('dSzt').value = p.szt;
       setPressed(presetBtns, function(b){ return b === btn; });
       if(key === 'hotel' || key === 'restauracja'){ $('horeca').open = true; }
@@ -784,6 +800,16 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         var plynnie = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         $('horeca').scrollIntoView({behavior: plynnie ? 'smooth' : 'auto', block: 'start'});
       }
+    });
+  });
+
+  var gazBtns = Array.prototype.slice.call(document.querySelectorAll('[data-gaz]'));
+  gazBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.gaz = (btn.dataset.gaz === 'tak');
+      setPressed(gazBtns, function(b){ return b === btn; });
+      $('dAbo').value = state.gaz ? PRESETS[state.preset].abo : ABO_BEZ_GAZU;
+      render();
     });
   });
 
@@ -820,6 +846,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
   loadUrl();
   presetBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.preset === state.preset ? 'true':'false'); });
+  gazBtns.forEach(function(b){ b.setAttribute('aria-pressed', (b.dataset.gaz === 'tak') === state.gaz ? 'true':'false'); });
   if(state.preset === 'hotel' || state.preset === 'restauracja'){ $('horeca').open = true; }
   nowBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.now === state.now ? 'true':'false'); });
   $('vat-net').setAttribute('aria-pressed', state.gross ? 'false':'true');
