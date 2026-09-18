@@ -244,6 +244,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <button type="button" data-preset="restauracja" aria-pressed="false">Restauracja</button>
         <button type="button" data-preset="zaklad" aria-pressed="false">Zakład</button>
         <button type="button" data-preset="urzad" aria-pressed="false">Urząd</button>
+        <button type="button" data-preset="medyczna" aria-pressed="false">Placówka medyczna</button>
       </div>
     </div>
 
@@ -255,7 +256,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       <label class="f">
         <span class="lab">Miejsca instalacji</span>
         <input type="number" id="dSzt" value="1" min="1" step="1">
-        <span class="hint">Jedno urządzenie na miejsce: osobne piętro, hala, druga kuchnia</span>
+        <span class="hint">Jedno urządzenie na miejsce: osobne piętro, hala, poczekalnia, druga kuchnia</span>
       </label>
       <label class="f">
         <span class="lab">Dni z wodą w miesiącu</span>
@@ -470,7 +471,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
+        <label class="f"><span class="lab">Miejsca instalacji</span><input type="number" id="dSztEcho" value="1" step="1" min="1"><span class="hint">To samo pole co w kroku 1, zmiana działa w obie strony</span></label>
         <label class="f"><span class="lab">Abonament za urządzenie (zł/mies.)</span><input type="number" id="dAbo" value="200" step="10" min="0"><span class="hint">Biuro od 200 zł, HoReCa 280-450 zł, zależnie od wydajności. Zawsze z wodą gazowaną. Ceny netto.</span></label>
+        <p class="hint" id="d-razem" style="margin:-4px 0 11px; color:var(--accent-ink)">—</p>
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies. za urządzenie)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
         <h4 style="margin-top:18px">Wspólne</h4>
@@ -524,7 +527,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     hotel:       {osoby:50,  dni:30, zuzycie:3, abo:280, szt:2},
     restauracja: {osoby:15,  dni:26, zuzycie:3, abo:280, szt:1},
     zaklad:      {osoby:100, dni:21, zuzycie:3, abo:280, szt:3},
-    urzad:       {osoby:40,  dni:21, zuzycie:2, abo:200, szt:2}
+    urzad:       {osoby:40,  dni:21, zuzycie:2, abo:200, szt:2},
+    medyczna:    {osoby:30,  dni:21, zuzycie:2, abo:200, szt:2}
   };
 
   function setPressed(list, matchFn){
@@ -591,6 +595,10 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
     $('d-litry').textContent = INT(r.litry) + ' L';
     $('d-woda').textContent = PLN(r.d.woda);
+    if($('dSztEcho').value !== $('dSzt').value){ $('dSztEcho').value = $('dSzt').value; }
+    $('d-razem').textContent = 'Razem za urządzenia: ' + r.d.szt + ' × ' +
+      PLN(num('dAbo') + num('dSer')) + ' = ' + PLN((num('dAbo') + num('dSer')) * r.d.szt) + ' miesięcznie';
+
     $('d-abo').textContent  = PLN(r.d.abo);
     $('d-abo-lab').textContent = r.d.szt > 1
       ? ('Abonament, ' + r.d.szt + ' urządzenia')
@@ -618,6 +626,11 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     $('chip-but').hidden = state.now !== 'but';
     $('chip-gal').hidden = state.now !== 'gal';
     $('rest-note').hidden = state.preset !== 'restauracja';
+
+    // sekcja o karafkach dotyczy tylko HoReCa, poza nia znika calkowicie
+    var horecaOn = (state.preset === 'hotel' || state.preset === 'restauracja');
+    $('horeca').hidden = !horecaOn;
+    if(!horecaOn){ $('horeca').open = false; }
 
     if(diff > 0){
       v.className = 'verdict loss'; big.className = 'big loss num';
@@ -749,6 +762,12 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
   // wiring
   FIELDS.forEach(function(f){ $(f).addEventListener('input', render); });
+
+  // pole miejsc instalacji jest w dwoch miejscach, trzymamy je zsynchronizowane
+  $('dSztEcho').addEventListener('input', function(){
+    $('dSzt').value = this.value;
+    render();
+  });
 
   var presetBtns = Array.prototype.slice.call(document.querySelectorAll('[data-preset]'));
   presetBtns.forEach(function(btn){
