@@ -100,6 +100,16 @@ input[type=number]:focus{outline:2px solid var(--accent); outline-offset:1px; bo
 
 .eyebrow{font:600 11px/1.3 var(--cond); letter-spacing:.09em; text-transform:uppercase; color:var(--muted)}
 
+/* intro */
+.intro{padding-block:26px 4px; max-width:64ch}
+.intro h1{font-size:clamp(24px,5.2vw,32px); line-height:1.15}
+.intro .lead{margin:12px 0 0; font-size:15.5px; line-height:1.6; color:var(--ink)}
+.intro .lead-sub{margin:9px 0 0; font-size:14px; line-height:1.6; color:var(--muted)}
+.intro .lead-horeca{
+  margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--accent-ink);
+  border-left:3px solid var(--brand); padding-left:11px;
+}
+
 /* verdict */
 .verdict{margin-top:22px; padding:22px; border-radius:var(--r); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow)}
 .verdict.saving{border-left:4px solid var(--green)}
@@ -203,11 +213,27 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
 <div class="wrap">
 
+  <section class="intro">
+    <h1>Ile naprawdę kosztuje was woda</h1>
+    <p class="lead">
+      Kalkulator stawia obok siebie trzy warianty: butelki 1,5 L, galony 18,9 L i dystrybutor podłączony do sieci wodociągowej.
+      Liczy przy tym to, co zwykle umyka, czyli dostawy, kaucje i czas ludzi na noszenie.
+    </p>
+    <p class="lead-sub">
+      Każde założenie jest polem do edycji, więc możecie wstawić własne ceny z faktury i zobaczyć swoje liczby zamiast naszych.
+      Bez rejestracji, wszystko przelicza się w waszej przeglądarce.
+    </p>
+    <p class="lead-horeca">
+      Restauracje i hotele: wybierzcie swój typ obiektu, a niżej dojdzie osobna część o tym,
+      ile karafek trzeba sprzedać, żeby urządzenie kosztowało zero.
+    </p>
+  </section>
+
   <section class="panel controls" aria-labelledby="h-start">
     <span class="eyebrow">Krok 1</span>
-    <h1 id="h-start" style="font-size:22px; margin-top:6px">Ile naprawdę kosztuje was woda</h1>
+    <h2 id="h-start" style="font-size:20px; margin-top:6px">Wasz obiekt</h2>
     <p style="margin:6px 0 0; color:var(--muted); max-width:60ch; font-size:14px">
-      Trzy pola i macie porównanie. Wszystkie założenia można podmienić niżej, w „Dopasuj szczegóły”.
+      Trzy pola i macie wynik. Resztę założeń podmienicie niżej, w „Dopasuj szczegóły”.
     </p>
 
     <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
