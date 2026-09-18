@@ -4,7 +4,7 @@ Narzędzie porównujące realny koszt wody w firmie w trzech wariantach: woda bu
 
 **https://bartolek1983.github.io/kalkulator-wody/**
 
-Jedna strona bez serwera i bez bazy danych. Wszystko liczy się w przeglądarce, żadne dane nie opuszczają urządzenia użytkownika.
+Jedna strona bez serwera i bez bazy danych. Wszystko liczy się w przeglądarce, żadne dane nie opuszczają urządzenia użytkownika. Każde założenie jest polem edytowalnym, a wynik przelicza się natychmiast.
 
 ---
 
@@ -19,7 +19,7 @@ galonów      = ⌈ litry ÷ pojemność galonu ⌉
 
 butelki      = butelek × cena + logistyka + obsługa
 galony       = galonów × cena + logistyka + wynajem + serwis + obsługa
-dystrybutor  = litry × cena wody z sieci + abonament + serwis
+dystrybutor  = litry × cena wody z sieci + (abonament + serwis) × liczba urządzeń
 ```
 
 Każda pozycja wchodząca do sumy ma swój widoczny wiersz w wyniku. Suma kolumny zawsze zgadza się z tym, co widać nad nią.
@@ -30,48 +30,20 @@ Każda pozycja wchodząca do sumy ma swój widoczny wiersz w wyniku. Suma kolumn
 
 **VAT albo wszędzie, albo nigdzie.** Jeden przełącznik przelicza wszystkie trzy warianty naraz. Domyślnie netto, ponieważ dla firm rozliczających VAT jest on przelewaniem z kieszeni do kieszeni.
 
-**Czas pracy jest domyślnie wyłączony.** Noszenie, magazynowanie i przyjmowanie dostaw kosztują, ale niełatwo przypisać im kwotę, której nikt nie podważy. Wynik podstawowy opiera się więc wyłącznie na kosztach twardych. Po włączeniu czas liczy się w każdym wariancie tak samo, według podanej stawki godzinowej.
+**Czas pracy jest domyślnie wyłączony.** Noszenie, magazynowanie i przyjmowanie dostaw kosztują, ale niełatwo przypisać im kwotę, której nikt nie podważy. Wynik podstawowy opiera się więc wyłącznie na kosztach twardych. Po włączeniu czas liczy się w każdym wariancie tak samo.
 
 ---
 
 ## Sekcja HoReCa
 
-Zwinięta, otwiera się po wybraniu presetu **Hotel** lub **Restauracja**. Przy restauracji strona przewija się od razu do tej sekcji, ponieważ porównanie kosztów w górnej części dotyczy wtedy tylko wody wypijanej przez personel, a nie tej sprzedawanej gościom.
-
-Nie prognozuje przychodu lokalu, bo tego nie da się oszacować z zewnątrz. Liczy **próg opłacalności**: ile sztuk danej pozycji z karty musi zejść w miesiącu, żeby urządzenie kosztowało zero.
+Otwiera się po wybraniu presetu Hotel lub Restauracja. Nie prognozuje przychodu lokalu, bo tego nie da się oszacować z zewnątrz. Liczy **próg opłacalności**: ile sztuk danej pozycji z karty musi zejść w miesiącu, żeby urządzenie kosztowało zero.
 
 ```
 marża na sztuce = cena w karcie − koszt składników − woda z sieci − CO2
-próg            = ⌈ (abonament + serwis) ÷ marża ⌉
+próg            = ⌈ koszt urządzeń ÷ marża ⌉
 ```
 
-Trzy pozycje liczone niezależnie: karafka wody, karafka lemoniady i herbata z wrzątku. CO2 doliczane jest do wody i lemoniady, herbata go nie wymaga. Cena wymiany butli i jej wydajność są polami edytowalnymi, więc koszt jednej karafki gazowanej jest widoczny wprost.
-
-Sekcja podaje też liczbę butelek, które w skali roku nie powstaną, oraz koszt krańcowy karafki po przekroczeniu progu.
-
----
-
-## Wartości domyślne
-
-Szacunki rynkowe, nie oferta. Każde pole jest edytowalne, wynik przelicza się natychmiast.
-
-| | Domyślnie |
-|---|---|
-| Butelka 1,5 L | 1,50 zł, kaucja 0,50 zł |
-| Galon 18,9 L | 15 zł, kaucja 30 zł, wynajem 40 zł/mies. |
-| Dystrybutor | abonament od 280 zł, serwis 10 zł |
-| Woda z sieci | 0,01 zł/L |
-| Stawka godzinowa | 45 zł |
-| Karafka w karcie | woda 12 zł, lemoniada 20 zł, herbata 12 zł |
-| Butla CO2 | 100 zł na 850 L wody gazowanej |
-
----
-
-## Wyliczenie dla konkretnego klienta
-
-Stan wszystkich pól zapisuje się w adresie strony. Po ustawieniu parametrów pod dany obiekt przycisk **Skopiuj link z tym wyliczeniem** daje adres, który otworzy się u odbiorcy z jego liczbami zamiast domyślnych.
-
-Strona ma arkusz stylów do druku, więc wyliczenie można zapisać do PDF i przekazać dalej w organizacji.
+Trzy pozycje liczone niezależnie: karafka wody, karafka lemoniady i herbata z wrzątku. Sekcja podaje też liczbę butelek, które w skali roku nie powstaną, oraz koszt krańcowy karafki po przekroczeniu progu.
 
 ---
 
@@ -81,7 +53,7 @@ Jeden plik `index.html`: struktura, style i skrypt w jednym, logo osadzone jako 
 
 Hosting: GitHub Pages, gałąź `main`, katalog główny. Wdrożenie następuje automatycznie po każdym commicie do `main`.
 
-Obsługuje jasny i ciemny motyw systemowy oraz układ mobilny od 360 px wzwyż.
+Stan wszystkich pól zapisuje się w adresie strony, więc wyliczenie można przesłać linkiem. Obsługuje jasny i ciemny motyw systemowy, układ mobilny od 360 px wzwyż oraz wydruk do PDF.
 
 ---
 
