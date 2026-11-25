@@ -331,7 +331,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <li><span>Woda</span><b id="g-woda">—</b></li>
         <li><span>Dostawy i logistyka</span><b id="g-log">—</b></li>
         <li><span>Wynajem i serwis urządzenia</span><b id="g-wyn">—</b></li>
-        <li><span>Wymiana galonów</span><b id="g-obs">—</b></li>
+        <li><span>Wymiana galonów i dostawy</span><b id="g-obs">—</b></li>
         <li class="sum"><span>Miesięcznie</span><b id="g-mies">—</b></li>
         <li class="year"><span>Rocznie</span><b id="g-rok">—</b></li>
       </ul>
@@ -345,11 +345,12 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <li><span>Woda z sieci</span><b id="d-woda">—</b></li>
         <li><span id="d-abo-lab">Abonament urządzenia</span><b id="d-abo">—</b></li>
         <li><span>Serwis, filtry, energia</span><b id="d-ser">—</b></li>
-        <li><span>Noszenie i magazyn</span><b id="d-obs">brak</b></li>
+        <li><span>Czas waszych ludzi</span><b id="d-obs">brak</b></li>
         <li class="sum"><span>Miesięcznie</span><b id="d-mies">—</b></li>
         <li class="year"><span>Rocznie</span><b id="d-rok">—</b></li>
       </ul>
-      <div class="note-frozen">Kaucje: <b>0,00 zł</b>. Nic nie wraca, nic nie stoi na palecie.</div>
+      <div class="note-frozen">Kaucje: <b>0,00 zł</b>. Nic nie wraca, nic nie stoi na palecie.
+        Montażem, serwisem i filtrami zajmuje się nasza ekipa, więc nikt u was nie dźwiga galonów ani zgrzewek.</div>
     </article>
   </section>
 
@@ -476,6 +477,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <label class="f"><span class="lab">Serwis i filtry (zł/mies.)</span><input type="number" id="gSer" value="0" step="5" min="0"></label>
         <label class="f"><span class="lab">Minuty na wymianę galonu</span><input type="number" id="gMin" value="5" step="1" min="0"></label>
         <label class="f"><span class="lab">Osób przy wymianie</span><input type="number" id="gOsoby" value="1" step="1" min="1"><span class="hint">Galon 18,9 L waży ok. 19 kg</span></label>
+        <label class="f"><span class="lab">Dostaw w miesiącu</span><input type="number" id="gDost" value="4" step="1" min="0"></label>
+        <label class="f"><span class="lab">Minuty na przyjęcie dostawy</span><input type="number" id="gMinDost" value="20" step="5" min="0"><span class="hint">Wniesienie pełnych galonów do magazynu, oddanie pustych</span></label>
       </div>
       <div class="adv-col">
         <h4>Dystrybutor sieciowy</h4>
@@ -485,7 +488,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <label class="f"><span class="lab">Serwis, filtry, energia (zł/mies. za urządzenie)</span><input type="number" id="dSer" value="10" step="5" min="0"></label>
         <label class="f"><span class="lab">Koszt wody z sieci (zł/L)</span><input type="number" id="dCena" value="0.01" step="0.001" min="0"></label>
         <h4 style="margin-top:18px">Wspólne</h4>
-        <label class="f"><span class="lab">Koszt godziny pracy (zł)</span><input type="number" id="stawka" value="45" step="5" min="0"><span class="hint">Używany do wyceny noszenia i magazynowania</span></label>
+        <label class="f"><span class="lab">Koszt godziny pracy (zł)</span><input type="number" id="stawka" value="45" step="5" min="0"><span class="hint">Liczony tylko przy butelkach i galonach. Przy dystrybutorze sieciowym czas pracy waszych ludzi wynosi zero, bo montaż, serwis i filtry są po naszej stronie</span></label>
         <label class="f"><span class="lab">Stawka VAT (%)</span><input type="number" id="vat" value="23" step="1" min="0"><span class="hint">Doliczany do wszystkich trzech wariantów albo do żadnego</span></label>
       </div>
     </div>
@@ -505,7 +508,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     Wartości domyślne to szacunki rynkowe, nie oferta. Podmieńcie je na swoje, a wynik przeliczy się od razu.
     Kaucje są zwrotne, więc pokazujemy je osobno jako zamrożony kapitał, a nie jako koszt miesięczny.
     Czas pracy na noszenie i magazynowanie jest domyślnie pominięty, żeby porównanie opierało się wyłącznie na twardych kosztach.
-    Po włączeniu liczymy go w każdym wariancie tak samo, według podanej stawki godzinowej.
+    Po włączeniu liczymy go według podanej stawki godzinowej, ale tylko przy butelkach i galonach.
+    Przy dystrybutorze sieciowym czas pracy waszych ludzi wynosi zero, bo montażem, serwisem i filtrami zajmuje się nasza ekipa.
     VAT albo doliczamy wszędzie, albo nigdzie.
   </footer>
 </div>
@@ -524,7 +528,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
   var num = function(id){ var v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
 
   var FIELDS = ['osoby','dni','zuzycie','bPoj','bCena','bKauc','bLog','bMinSzt','bDost','bMinDost',
-                'gPoj','gCena','gKauc','gLog','gWyn','gSer','gMin','gOsoby',
+                'gPoj','gCena','gKauc','gLog','gWyn','gSer','gMin','gOsoby','gDost','gMinDost',
                 'dSzt','dAbo','dSer','dCena','stawka','vat',
                 'hCenaW','hKosztW','hCenaL','hKosztL','hCenaH','hKosztH','hIle',
                 'hCO2Cena','hCO2Wyd','hKarafka'];
@@ -567,11 +571,14 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     var gWoda = gSzt * num('gCena');
     var gLog  = num('gLog');
     var gWyn  = num('gWyn') + num('gSer');
-    var gObs  = state.labour ? (num('gMin')/60) * num('gOsoby') * gSzt * stawka : 0;
+    // czas ludzi przy galonach: wymiana na dystrybutorze plus przyjecie dostaw
+    var gObsMin = gSzt * num('gMin') * num('gOsoby') + num('gDost') * num('gMinDost');
+    var gObs  = state.labour ? (gObsMin / 60) * stawka : 0;
     var gMies = (gWoda + gLog + gWyn + gObs) * vatMul;
     var gKauc = gSzt * num('gKauc');
 
-    // dystrybutor
+    // dystrybutor sieciowy: czasu pracy klienta nie liczymy nigdy, bo montaz,
+    // serwis i filtry robi nasza ekipa. Przelacznik czasu pracy go nie dotyczy.
     var dSzt = Math.max(1, Math.round(num('dSzt') || 1));
     var dWoda = litry * num('dCena');
     var dAbo = num('dAbo') * dSzt, dSer = num('dSer') * dSzt;
@@ -605,6 +612,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
     $('d-litry').textContent = INT(r.litry) + ' L';
     $('d-woda').textContent = PLN(r.d.woda);
+    $('d-obs').textContent  = state.labour ? PLN(0) : 'brak';
     if($('dSztEcho').value !== $('dSzt').value){ $('dSztEcho').value = $('dSzt').value; }
     $('d-razem').textContent = 'Razem za urządzenia: ' + r.d.szt + ' × ' +
       PLN(num('dAbo') + num('dSer')) + ' = ' + PLN((num('dAbo') + num('dSer')) * r.d.szt) + ' miesięcznie';
@@ -647,7 +655,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
       big.textContent = PLN(diff*12) + ' rocznie';
       $('verdict-txt').textContent = 'Tyle więcej kosztuje was woda na ' + curName + ' niż na dystrybutorze podłączonym do sieci, przy ' +
         INT(r.litry) + ' litrach miesięcznie. To ' + PLN(diff) + ' co miesiąc, licząc wodę i dostawy' +
-        (state.labour ? ' oraz czas ludzi.' : '. Czasu waszych ludzi na noszenie i magazynowanie w ogóle tu nie liczymy.');
+        (state.labour ? ' oraz czas ludzi, który przy dystrybutorze sieciowym wynosi zero.' :'. Czasu waszych ludzi na noszenie i magazynowanie w ogóle tu nie liczymy.');
       $('hz12').style.color = 'var(--green)';
     } else {
       v.className = 'verdict saving'; big.className = 'big saving num';
