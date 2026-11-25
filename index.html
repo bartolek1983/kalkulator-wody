@@ -330,7 +330,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <li><span>Galonów miesięcznie</span><b id="g-szt">—</b></li>
         <li><span>Woda</span><b id="g-woda">—</b></li>
         <li><span>Dostawy i logistyka</span><b id="g-log">—</b></li>
-        <li><span>Wynajem i serwis urządzenia</span><b id="g-wyn">—</b></li>
+        <li><span id="g-wyn-lab">Wynajem i serwis urządzenia</span><b id="g-wyn">—</b></li>
         <li><span>Wymiana galonów i dostawy</span><b id="g-obs">—</b></li>
         <li class="sum"><span>Miesięcznie</span><b id="g-mies">—</b></li>
         <li class="year"><span>Rocznie</span><b id="g-rok">—</b></li>
@@ -473,8 +473,8 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
         <label class="f"><span class="lab">Cena za galon (zł)</span><input type="number" id="gCena" value="15" step="1" min="0"><span class="hint">Domyślnie średnia rynkowa. Wpiszcie swoją z faktury</span></label>
         <label class="f"><span class="lab">Kaucja za galon (zł)</span><input type="number" id="gKauc" value="30" step="1" min="0"></label>
         <label class="f"><span class="lab">Logistyka / dostawy (zł/mies.)</span><input type="number" id="gLog" value="0" step="10" min="0"></label>
-        <label class="f"><span class="lab">Wynajem urządzenia (zł/mies.)</span><input type="number" id="gWyn" value="40" step="5" min="0"></label>
-        <label class="f"><span class="lab">Serwis i filtry (zł/mies.)</span><input type="number" id="gSer" value="0" step="5" min="0"></label>
+        <label class="f"><span class="lab">Wynajem dystrybutora (zł/mies. za urządzenie)</span><input type="number" id="gWyn" value="40" step="5" min="0"><span class="hint">Liczymy tyle dystrybutorów, ile miejsc instalacji w kroku 1</span></label>
+        <label class="f"><span class="lab">Serwis i sanityzacja (zł/mies. za urządzenie)</span><input type="number" id="gSer" value="0" step="5" min="0"></label>
         <label class="f"><span class="lab">Minuty na wymianę galonu</span><input type="number" id="gMin" value="5" step="1" min="0"></label>
         <label class="f"><span class="lab">Osób przy wymianie</span><input type="number" id="gOsoby" value="1" step="1" min="1"><span class="hint">Galon 18,9 L waży ok. 19 kg</span></label>
         <label class="f"><span class="lab">Dostaw w miesiącu</span><input type="number" id="gDost" value="4" step="1" min="0"></label>
@@ -524,6 +524,11 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     return n.toLocaleString('pl-PL',{minimumFractionDigits:2, maximumFractionDigits:2}) + ' zł';
   };
   var INT = function(n){ return Math.round(n).toLocaleString('pl-PL'); };
+  // odmiana: 2 urzadzenia, 5 urzadzen, 22 urzadzenia, 12 urzadzen
+  var URZ = function(n){
+    var j = n % 10, d = n % 100;
+    return (j >= 2 && j <= 4 && (d < 12 || d > 14)) ? 'urządzenia' : 'urządzeń';
+  };
   var $ = function(id){ return document.getElementById(id); };
   var num = function(id){ var v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
 
@@ -565,12 +570,15 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     var bMies = (bWoda + bLog + bObs) * vatMul;
     var bKauc = bSzt * num('bKauc');
 
-    // galony
+    // tyle samo miejsc instalacji przy galonach i przy dystrybutorze sieciowym
+    var dSzt = Math.max(1, Math.round(num('dSzt') || 1));
+
+    // galony: wynajem i serwis placi sie za kazdy dystrybutor osobno
     var gPoj = num('gPoj') || 1;
     var gSzt = Math.ceil(litry / gPoj);
     var gWoda = gSzt * num('gCena');
     var gLog  = num('gLog');
-    var gWyn  = num('gWyn') + num('gSer');
+    var gWyn  = (num('gWyn') + num('gSer')) * dSzt;
     // czas ludzi przy galonach: wymiana na dystrybutorze plus przyjecie dostaw
     var gObsMin = gSzt * num('gMin') * num('gOsoby') + num('gDost') * num('gMinDost');
     var gObs  = state.labour ? (gObsMin / 60) * stawka : 0;
@@ -579,7 +587,6 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
     // dystrybutor sieciowy: czasu pracy klienta nie liczymy nigdy, bo montaz,
     // serwis i filtry robi nasza ekipa. Przelacznik czasu pracy go nie dotyczy.
-    var dSzt = Math.max(1, Math.round(num('dSzt') || 1));
     var dWoda = litry * num('dCena');
     var dAbo = num('dAbo') * dSzt, dSer = num('dSer') * dSzt;
     var dMies = (dWoda + dAbo + dSer) * vatMul;
@@ -605,6 +612,9 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
     $('g-woda').textContent = PLN(r.g.woda);
     $('g-log').textContent  = PLN(r.g.log);
     $('g-wyn').textContent  = PLN(r.g.wyn);
+    $('g-wyn-lab').textContent = r.d.szt > 1
+      ? ('Wynajem i serwis, ' + r.d.szt + ' ' + URZ(r.d.szt))
+      : 'Wynajem i serwis urządzenia';
     $('g-obs').textContent  = state.labour ? PLN(r.g.obs) : 'nie liczymy';
     $('g-mies').textContent = PLN(r.g.mies);
     $('g-rok').textContent  = PLN(r.g.mies*12);
@@ -619,7 +629,7 @@ footer.fine{margin-top:26px; font-size:12px; color:var(--faint); line-height:1.6
 
     $('d-abo').textContent  = PLN(r.d.abo);
     $('d-abo-lab').textContent = r.d.szt > 1
-      ? ('Abonament, ' + r.d.szt + ' urządzenia')
+      ? ('Abonament, ' + r.d.szt + ' ' + URZ(r.d.szt))
       : 'Abonament urządzenia';
     $('d-ser').textContent  = PLN(r.d.ser);
     $('d-mies').textContent = PLN(r.d.mies);
